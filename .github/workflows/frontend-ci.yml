@@ -4,22 +4,23 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'favorite-color-frontend/**'
+      - '**'
   pull_request:
     branches: [ main ]
     paths:
-      - 'favorite-color-frontend/**'
+      - '**'
 
 env:
   AWS_REGION: us-east-1
   ENVIRONMENT: dev
+  PROJECT_NAME: favorite-color
 
 jobs:
   test:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: favorite-color-frontend
+        working-directory: .
 
     steps:
       - uses: actions/checkout@v4
@@ -27,8 +28,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
+          cache-dependency-path: './package-lock.json'
 
       - name: Install dependencies
         run: npm ci
@@ -39,13 +41,13 @@ jobs:
       - name: Run tests
         run: npm test
 
-  build-and-deploy:
+  deploy:
     needs: test
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: favorite-color-frontend
+        working-directory: .
 
     steps:
       - uses: actions/checkout@v4
@@ -57,34 +59,49 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Get API URL from SSM
+        run: |
+          API_URL=$(aws ssm get-parameter --name "/${env.PROJECT_NAME}/${env.ENVIRONMENT}/api_url" --query "Parameter.Value" --output text)
+          echo "VITE_API_URL=$API_URL" >> $GITHUB_ENV
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
+          cache-dependency-path: './package-lock.json'
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build
         run: npm run build
+        env:
+          VITE_API_URL: ${{ secrets.API_URL }}
 
       - name: Deploy to S3
         run: |
-          aws s3 sync dist/ s3://favorite-color-${{ env.ENVIRONMENT }}-website \
+          # First sync all files except HTML with long cache
+          aws s3 sync dist/ s3://${{ secrets.WEBSITE_BUCKET_NAME }} \
             --delete \
             --cache-control "max-age=31536000,public" \
-            --exclude "index.html" \
-            --exclude "assets/*"
+            --exclude "*.html" \
+            --content-type "application/javascript" \
+            --exclude "*.css" \
+            --exclude "*.json" \
+            --exclude "*.png" \
+            --exclude "*.jpg" \
+            --exclude "*.svg"
 
-          aws s3 sync dist/ s3://favorite-color-${{ env.ENVIRONMENT }}-website \
+          # Sync CSS files with correct content type
+          aws s3 sync dist/ s3://${{ secrets.WEBSITE_BUCKET_NAME }} \
             --delete \
-            --cache-control "no-cache" \
-            --include "index.html" \
-            --include "assets/*"
+            --cache-control "max-age=31536000,public" \
+            --include "*.css" \
+            --content-type "text/css"
 
-      - name: Invalidate CloudFront cache
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/*" 
+          # Sync HTML files with no cache
+          aws s3 sync dist/ s3://${{ secrets.WEBSITE_BUCKET_NAME }} \
+            --cache-control "no-cache,no-store,must-revalidate" \
+            --include "*.html" \
+            --content-type "text/html" 

@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { ColorSubmission } from '../types/api';
 import { submitColor } from '../services/api';
 
-interface ColorFormProps {
+export interface ColorFormProps {
   onSuccess?: () => void;
 }
 
