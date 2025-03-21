@@ -59,11 +59,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Get API URL from SSM
-        run: |
-          API_URL=$(aws ssm get-parameter --name "/${env.PROJECT_NAME}/${env.ENVIRONMENT}/api_url" --query "Parameter.Value" --output text)
-          echo "VITE_API_URL=$API_URL" >> $GITHUB_ENV
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
