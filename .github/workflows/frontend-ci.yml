@@ -76,21 +76,5 @@ jobs:
 
       - name: Deploy to S3
         run: |
-          # First, sync files with specific content types
           aws s3 sync dist/ s3://${{ secrets.WEBSITE_BUCKET_NAME }} \
-            --include "*.css" \
-            --content-type "text/css" \
-            --cache-control "max-age=31536000,public"
-
-          # Sync HTML files with no cache
-          aws s3 sync dist/ s3://${{ secrets.WEBSITE_BUCKET_NAME }} \
-            --include "*.html" \
-            --content-type "text/html" \
-            --cache-control "no-cache,no-store,must-revalidate"
-
-          # Finally, sync all remaining files with appropriate caching
-          aws s3 sync dist/ s3://${{ secrets.WEBSITE_BUCKET_NAME }} \
-            --delete \
-            --exclude "*.html" \
-            --exclude "*.css" \
-            --cache-control "max-age=31536000,public" 
+            --delete
