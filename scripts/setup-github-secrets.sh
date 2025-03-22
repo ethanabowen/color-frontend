@@ -33,6 +33,7 @@ cd ../../favorite-color-backend/terraform || exit 1
 AWS_KEY_ID=$(AWS_PROFILE=$AWS_PROFILE terraform output -raw frontend_ci_access_key_id)
 AWS_SECRET=$(AWS_PROFILE=$AWS_PROFILE terraform output -raw frontend_ci_secret_access_key)
 WEBSITE_BUCKET=$(AWS_PROFILE=$AWS_PROFILE terraform output -raw website_bucket_name)
+CLOUDFRONT_DISTRIBUTION_ID=$(AWS_PROFILE=$AWS_PROFILE terraform output -raw cloudfront_distribution_id)
 API_URL=$(AWS_PROFILE=$AWS_PROFILE terraform output -raw api_url)
 
 # Return to frontend directory
@@ -43,6 +44,7 @@ echo "Setting GitHub secrets..."
 gh secret set AWS_ACCESS_KEY_ID -b "$AWS_KEY_ID"
 gh secret set AWS_SECRET_ACCESS_KEY -b "$AWS_SECRET"
 gh secret set WEBSITE_BUCKET_NAME -b "$WEBSITE_BUCKET"
+gh secret set CLOUDFRONT_DISTRIBUTION_ID -b "$CLOUDFRONT_DISTRIBUTION_ID"
 gh secret set API_URL -b "$API_URL"
 
 # Verify secrets were set
