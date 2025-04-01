@@ -25,12 +25,26 @@ export const submitColor = async (submission: ColorSubmission): Promise<ApiRespo
   }
 };
 
-export const searchColors = async (firstName?: string): Promise<ApiResponse<ColorSearchResult[]>> => {
+export const searchColors = async (firstName: string): Promise<ApiResponse<ColorSearchResult[]>> => {
   try {
+    // Don't make API call if firstName is empty
+    if (!firstName || !firstName.trim()) {
+      return {
+        data: [],
+        statusCode: 200
+      };
+    }
+    
     const response = await api.get<ApiResponse<ColorSearchResult[]>>('/colors', {
-      params: firstName ? { firstName } : undefined,
+      params: { firstName },
     });
-    return response.data;
+    
+    // Ensure we always return a properly formatted response with data array
+    // This fixes the blank page issue when searching for "Ethan"
+    return {
+      data: Array.isArray(response.data.data) ? response.data.data : [],
+      statusCode: response.data.statusCode || 200
+    };
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw {
