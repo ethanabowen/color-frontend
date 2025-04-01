@@ -44,7 +44,9 @@ This is the frontend application for the Favorite Color project, built with Reac
 Create a `.env` file in the root directory:
 
 ```env
+# API endpoint URL
 VITE_API_URL=http://localhost:3000
+DEBUG=*
 ```
 
 ## Project Structure
