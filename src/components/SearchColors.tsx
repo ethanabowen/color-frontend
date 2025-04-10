@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { ColorRecord } from '@generated/client';
+import { ColorRecord, ColorRecordResponse } from '@generated/client';
 import { searchColors } from '../services/api';
 
 export const SearchColors = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [results, setResults] = useState<ColorSearchResult[]>([]);
+  const [results, setResults] = useState<ColorRecordResponse>({} as ColorRecordResponse);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
@@ -18,10 +18,10 @@ export const SearchColors = () => {
       setError(null);
       setHasSearched(true);
       const response = await searchColors(searchTerm);
-      setResults(response.data || []);
+      setResults(response);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to search colors');
-      setResults([]);
+      setResults({} as ColorRecordResponse);
     } finally {
       setIsLoading(false);
     }
@@ -69,26 +69,28 @@ export const SearchColors = () => {
         </div>
       ) : (
         <div className="space-y-2">
-          {results && results.length > 0 && results.map((result, index) => (
+          {results?.data?.colors 
+            && results.data.colors.length > 0 
+            && results.data.colors.map((color, index: number) => (
             <div
-              key={`${result.firstName}-${index}`}
+              key={`${results?.data?.pk}-${index}`}
               className="rounded-lg border border-gray-200 p-4 shadow-sm"
             >
               <div className="flex items-center space-x-4">
                 <div
                   className="h-8 w-8 rounded-full"
-                  style={{ backgroundColor: result.color }}
+                  style={{ backgroundColor: color }}
                 />
                 <div>
-                  <p className="font-medium text-gray-900">{result.firstName}</p>
+                  <p className="font-medium text-gray-900">{results?.data?.pk}</p>
                   <p className="text-sm text-gray-500">
-                    Color: {result.color}
+                    Color: {color}
                   </p>
                 </div>
               </div>
             </div>
           ))}
-          {results.length === 0 && hasSearched && (
+          {(!results?.data || (results?.data?.colors && results?.data?.colors?.length === 0 && hasSearched)) && (
             <p className="text-sm text-gray-500">
               No results found for "{searchTerm}"
             </p>
