@@ -18,7 +18,8 @@
     "types": ["vitest/globals", "@testing-library/jest-dom"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@generated/*": ["src/generated/*"]
     }
   },
   "include": ["src", "tests"],

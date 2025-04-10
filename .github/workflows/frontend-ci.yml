@@ -13,7 +13,7 @@ on:
 env:
   AWS_REGION: us-east-1
   ENVIRONMENT: dev
-  PROJECT_NAME: favorite-color
+  PROJECT_NAME: color
 
 jobs:
   test:

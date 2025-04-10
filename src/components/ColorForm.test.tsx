@@ -14,7 +14,7 @@ describe('ColorForm', () => {
     render(<ColorForm />);
     
     expect(screen.getByLabelText(/first name/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/favorite color/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/color/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /submit/i })).toBeInTheDocument();
   });
 
@@ -23,7 +23,7 @@ describe('ColorForm', () => {
     render(<ColorForm onSuccess={onSuccess} />);
     
     const firstNameInput = screen.getByLabelText(/first name/i);
-    const colorInput = screen.getByLabelText(/favorite color/i);
+    const colorInput = screen.getByLabelText(/color/i);
     const submitButton = screen.getByRole('button', { name: /submit/i });
 
     await userEvent.type(firstNameInput, 'John');
@@ -32,7 +32,7 @@ describe('ColorForm', () => {
 
     expect(submitColor).toHaveBeenCalledWith({
       firstName: 'John',
-      favoriteColor: 'blue',
+      color: 'blue',
     });
     expect(await screen.findByText(/color submitted successfully/i)).toBeInTheDocument();
     expect(onSuccess).toHaveBeenCalled();
@@ -45,7 +45,7 @@ describe('ColorForm', () => {
     await userEvent.click(submitButton);
 
     expect(await screen.findByText(/first name is required/i)).toBeInTheDocument();
-    expect(await screen.findByText(/favorite color is required/i)).toBeInTheDocument();
+    expect(await screen.findByText(/color is required/i)).toBeInTheDocument();
   });
 
   it('shows error message when submission fails', async () => {
@@ -55,7 +55,7 @@ describe('ColorForm', () => {
     render(<ColorForm />);
     
     const firstNameInput = screen.getByLabelText(/first name/i);
-    const colorInput = screen.getByLabelText(/favorite color/i);
+    const colorInput = screen.getByLabelText(/color/i);
     const submitButton = screen.getByRole('button', { name: /submit/i });
 
     await userEvent.type(firstNameInput, 'John');

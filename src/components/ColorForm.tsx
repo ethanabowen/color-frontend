@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { ColorSubmission } from '../types/api';
+import { ColorSubmission } from '@generated/client';
 import { submitColor } from '../services/api';
 
 export interface ColorFormProps {
@@ -52,17 +52,17 @@ export const ColorForm = ({ onSuccess }: ColorFormProps) => {
       </div>
 
       <div>
-        <label htmlFor="favoriteColor" className="block text-sm font-medium text-gray-700">
-          Favorite Color
+        <label htmlFor="color" className="block text-sm font-medium text-gray-700">
+          Color
         </label>
         <input
           type="text"
-          id="favoriteColor"
-          {...register('favoriteColor', { required: 'Favorite color is required' })}
+          id="color"
+          {...register('color', { required: 'color is required' })}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
         />
-        {errors.favoriteColor && (
-          <p className="mt-1 text-sm text-red-600">{errors.favoriteColor.message}</p>
+        {errors.color && (
+          <p className="mt-1 text-sm text-red-600">{errors.color.message}</p>
         )}
       </div>
 

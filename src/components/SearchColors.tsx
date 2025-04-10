@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ColorSearchResult } from '../types/api';
+import { ColorRecord } from '@generated/client';
 import { searchColors } from '../services/api';
 
 export const SearchColors = () => {
@@ -77,12 +77,12 @@ export const SearchColors = () => {
               <div className="flex items-center space-x-4">
                 <div
                   className="h-8 w-8 rounded-full"
-                  style={{ backgroundColor: result.favoriteColor }}
+                  style={{ backgroundColor: result.color }}
                 />
                 <div>
                   <p className="font-medium text-gray-900">{result.firstName}</p>
                   <p className="text-sm text-gray-500">
-                    Favorite color: {result.favoriteColor}
+                    Color: {result.color}
                   </p>
                 </div>
               </div>
@@ -95,7 +95,7 @@ export const SearchColors = () => {
           )}
           {!hasSearched && !isLoading && (
             <p className="text-sm text-gray-500">
-              Enter a name and click Search to find favorite colors
+              Enter a name and click Search to find colors
             </p>
           )}
         </div>

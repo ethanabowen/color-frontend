@@ -1,10 +1,10 @@
-# Favorite Color Frontend
+# Color Frontend
 
-This is the frontend application for the Favorite Color project, built with React, TypeScript, and Tailwind CSS.
+This is the frontend application for the Color project, built with React, TypeScript, and Tailwind CSS.
 
 ## Features
 
-- Submit favorite colors with first name
+- Submit colors with first name
 - Search colors by first name
 - Responsive design
 - Real-time search with debouncing
@@ -51,8 +51,8 @@ DEBUG=*
 
 ## Project Structure
 
-```
-favorite-color-frontend/
+``
+color-frontend/
 ├── src/
 │   ├── components/     # Reusable UI components
 │   │   ├── NavBar.tsx
@@ -75,13 +75,13 @@ favorite-color-frontend/
 Navigation component with links to different pages.
 
 ### ColorForm
-Form component for submitting favorite colors.
+Form component for submitting colors.
 
 Props:
 - `onSuccess?: () => void` - Callback function when submission is successful
 
 ### SearchColors
-Component for searching and displaying favorite colors.
+Component for searching and displaying colors.
 
 Features:
 - Real-time search with debouncing

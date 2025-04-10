@@ -27,7 +27,7 @@ fi
 
 # Get AWS credentials from backend Terraform output
 echo "Getting AWS credentials from backend Terraform output..."
-cd ../../favorite-color-backend/terraform || exit 1
+cd ../../color-backend/terraform || exit 1
 
 # Get the values using the specified AWS profile
 AWS_KEY_ID=$(AWS_PROFILE=$AWS_PROFILE terraform output -raw frontend_ci_access_key_id)
@@ -37,7 +37,7 @@ CLOUDFRONT_DISTRIBUTION_ID=$(AWS_PROFILE=$AWS_PROFILE terraform output -raw clou
 API_URL=$(AWS_PROFILE=$AWS_PROFILE terraform output -raw api_url)
 
 # Return to frontend directory
-cd ../../favorite-color-frontend || exit 1
+cd ../../color-frontend || exit 1
 
 # Set GitHub secrets
 echo "Setting GitHub secrets..."
