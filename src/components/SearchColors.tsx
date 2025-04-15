@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ColorRecord, ColorRecordResponse } from '@generated/client';
+import { ColorRecordResponse } from '@generated/client';
 import { searchColors } from '../services/api';
 
 export const SearchColors = () => {

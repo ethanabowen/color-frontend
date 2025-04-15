@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ColorSubmission, ApiResponse, ColorRecordResponse, ErrorResponse } from '@generated/client';
+import { ColorSubmission, ColorRecordResponse, ErrorResponse } from '@generated/client';
 import DEBUG from '../utils/debug';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
