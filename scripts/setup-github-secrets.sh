@@ -26,18 +26,22 @@ if ! gh auth status > /dev/null 2>&1; then
 fi
 
 # Get AWS credentials from backend Terraform output
-echo "Getting AWS credentials from backend Terraform output..."
-cd ../../color-backend/terraform || exit 1
+echo "Getting AWS credentials from backend cicd Terraform output..."
+cd ../../color-backend/terraform/cicd || exit 1
 
 # Get the values using the specified AWS profile
 AWS_KEY_ID=$(AWS_PROFILE=$AWS_PROFILE terraform output -raw frontend_ci_access_key_id)
 AWS_SECRET=$(AWS_PROFILE=$AWS_PROFILE terraform output -raw frontend_ci_secret_access_key)
+
+echo "Getting rest of the values from backend application Terraform output..."
+cd ../application || exit 1
+
 WEBSITE_BUCKET=$(AWS_PROFILE=$AWS_PROFILE terraform output -raw website_bucket_name)
 CLOUDFRONT_DISTRIBUTION_ID=$(AWS_PROFILE=$AWS_PROFILE terraform output -raw cloudfront_distribution_id)
 API_URL=$(AWS_PROFILE=$AWS_PROFILE terraform output -raw api_url)
 
 # Return to frontend directory
-cd ../../color-frontend || exit 1
+cd ../../../color-frontend || exit 1
 
 # Set GitHub secrets
 echo "Setting GitHub secrets..."
